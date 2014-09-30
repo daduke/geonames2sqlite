@@ -9,6 +9,7 @@
 #  5. hierarchy.txt
 #
 # NB: output sqlite db will be overwritten
+# TODO: do not complain if table does not contain geonameid field to build index on
 
 indir=$1
 db=$2
@@ -75,7 +76,7 @@ function createtables
 		adm1_code TEXT,
 		adm1_name TEXT,
 		adm1_asciiname TEXT,
-		geonameid TEXT NOT NULL
+		geonameid INTEGER NOT NULL
 	);
 	CREATE TABLE admin2codes (
 		adm0_code TEXT,
@@ -83,7 +84,7 @@ function createtables
 		adm2_code TEXT,
 		adm2_name TEXT,
 		adm2_asciiname TEXT,
-		geonameid TEXT NOT NULL
+		geonameid INTEGER NOT NULL
 	);
 	CREATE TABLE featurecodes_en (
 		class TEXT,
@@ -109,7 +110,7 @@ do
 	cat > $tmp <<EOF
 .separator '	'
 .import $indir/${table}.txt $table
---CREATE INDEX geoid ON $table (geonameid);
+CREATE INDEX geo_${table} ON $table (geonameid);
 EOF
 	# would have used 'cat | sqlite3 $db' but hangs
 	cat $tmp | sqlite3 $db
