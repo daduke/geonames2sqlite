@@ -1,4 +1,4 @@
-#!/bin/bash
+#/bin/bash
 
 # put geonames into a sqlite db
 # user args: 1) directory containing the following geonames txt dump files and nothing else:
@@ -86,15 +86,15 @@ function createtables
 		geonameid TEXT NOT NULL
 	);
 	CREATE TABLE featurecodes_en (
-		class,
-		code,
-		name,
-		description
+		class TEXT,
+		code TEXT,
+		name TEXT,
+		description TEXT
 	);
 	CREATE TABLE hierarchy (
-		parent_id NOT NULL,
-		child_id NOT NULL,
-		type
+		parent_id INTEGER NOT NULL,
+		child_id INTEGER NOT NULL,
+		type TEXT
 	);
 EOF
 	# would have used 'cat | sqlite3 $db' but hangs
@@ -107,16 +107,14 @@ function copytables
 for table in $basenames
 do
 	cat > $tmp <<EOF
-	.separator '	'
-	.import $indir/${table}.txt $table
-	CREATE INDEX geoid ON geonames (geonameid);
+.separator '	'
+.import $indir/${table}.txt $table
+--CREATE INDEX geoid ON $table (geonameid);
 EOF
 	# would have used 'cat | sqlite3 $db' but hangs
 	cat $tmp | sqlite3 $db
-	cat $tmp
 done
 }
-
 
 fieldsplit
 createtables
