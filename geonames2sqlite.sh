@@ -10,6 +10,7 @@
 #
 # NB: output sqlite db will be overwritten
 # TODO: do not complain if table does not contain geonameid field to build index on
+# example use: $0 input/ output/geonames_$(date +%F).sqlite
 
 indir=$1
 db=$2
@@ -50,8 +51,11 @@ function fieldsplit
 function createtables
 {
 	cat > $tmp <<EOF
+	-- allCountries ought to be broken into more tables for admin codes and feature classes
+	-- otherwise we can't use admin1codesascii.adm1_code as a foreign key, or admin2codes.adm2_code, or featurecodes_en.class, or featurecodes_en.code, or 
+	PRAGMA foreign_keys = on;
 	CREATE TABLE allCountries (
-		geonameid INTEGER NOT NULL,
+		geonameid INTEGER NOT NULL PRIMARY KEY,
 		name TEXT,
 		asciiname TEXT,
 		alternatenames TEXT,
@@ -76,7 +80,8 @@ function createtables
 		adm1_code TEXT,
 		adm1_name TEXT,
 		adm1_asciiname TEXT,
-		geonameid INTEGER NOT NULL
+		geonameid INTEGER NOT NULL,
+		FOREIGN KEY(geonameid) REFERENCES allCountries(geonameid)
 	);
 	CREATE TABLE admin2codes (
 		adm0_code TEXT,
@@ -84,7 +89,8 @@ function createtables
 		adm2_code TEXT,
 		adm2_name TEXT,
 		adm2_asciiname TEXT,
-		geonameid INTEGER NOT NULL
+		geonameid INTEGER NOT NULL,
+		FOREIGN KEY(geonameid) REFERENCES allCountries(geonameid)
 	);
 	CREATE TABLE featurecodes_en (
 		class TEXT,
@@ -95,7 +101,9 @@ function createtables
 	CREATE TABLE hierarchy (
 		parent_id INTEGER NOT NULL,
 		child_id INTEGER NOT NULL,
-		type TEXT
+		type TEXT,
+		FOREIGN KEY(parent_id) REFERENCES allCountries(geonameid)
+		FOREIGN KEY(child_id) REFERENCES allCountries(geonameid)
 	);
 EOF
 	# would have used 'cat | sqlite3 $db' but hangs
