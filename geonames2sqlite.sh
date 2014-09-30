@@ -3,8 +3,8 @@
 # put geonames into a sqlite db
 # user args: 1) directory containing the following geonames txt dump files and nothing else:
 #  1. allCountries.txt
-#  2. admin1CodesASCII.tx
-#  3. admin2Codes.tx
+#  2. admin1CodesASCII.txt
+#  3. admin2Codes.txt
 #  4. featureCodes_en.txt
 #  5. hierarchy.txt
 #
@@ -26,7 +26,7 @@ basenames=$(
 )
 
 # split geonames TSV fields on period
-# eg AF.01.1125426 becomes three fields: adm0_cod, adm1_code, and adm2_code
+# eg AF.01.1125426 becomes three fields: adm0_code, adm1_code, and adm2_code
 # NB: this function relies exactly on the nature of the geonames txt files
 # consulte the geonames README as needed
 function fieldsplit
@@ -53,7 +53,7 @@ function createtables
 	cat > $tmp <<EOF
 	-- allCountries ought to be broken into more tables for admin codes and feature classes
 	-- otherwise we can't use admin1codesascii.adm1_code as a foreign key, or admin2codes.adm2_code, or featurecodes_en.class, or featurecodes_en.code, or 
-	PRAGMA foreign_keys = on;
+	--PRAGMA foreign_keys = on;
 	CREATE TABLE allCountries (
 		geonameid INTEGER NOT NULL PRIMARY KEY,
 		name TEXT,
