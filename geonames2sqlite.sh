@@ -7,6 +7,7 @@
 #  3. admin2Codes.txt
 #  4. featureCodes_en.txt
 #  5. hierarchy.txt
+#  6. countryInfo.txt
 #
 # NB: output sqlite db will be overwritten
 # TODO: do not complain if table does not contain geonameid field to build index on
@@ -24,6 +25,17 @@ basenames=$(
 		basename $name .txt
 	done
 )
+
+# right now country info table has junk above the actual records
+# remove this based on the appearance of the header
+function mk_countryinfo
+{
+	if [[ -n $( cat $indir/countryInfo.txt | grep -E '^#ISO' ) ]]; then
+		cat $indir/countryInfo.txt |\
+		sed '1,/#ISO/d' |\
+		sponge $indir/countryInfo.txt
+	fi
+}
 
 # split geonames TSV fields on period
 # eg AF.01.1125426 becomes three fields: adm0_code, adm1_code, and adm2_code
@@ -54,6 +66,28 @@ function createtables
 	-- allCountries ought to be broken into more tables for admin codes and feature classes
 	-- otherwise we can't use admin1codesascii.adm1_code as a foreign key, or admin2codes.adm2_code, or featurecodes_en.class, or featurecodes_en.code, or 
 	--PRAGMA foreign_keys = on;
+	CREATE TABLE "countryInfo" (
+		"ISO" TEXT
+		"ISO3" TEXT NOT NULL, 
+		"ISO-Numeric" TEXT NOT NULL, 
+		fips TEXT, 
+		"Country" TEXT NOT NULL, 
+		"Capital" TEXT, 
+		"Area(in sq km)" FLOAT, 
+		"Population" INTEGER NOT NULL, 
+		"Continent" TEXT, 
+		tld TEXT, 
+		"CurrencyCode" TEXT, 
+		"CurrencyName" TEXT, 
+		"Phone" TEXT, 
+		"Postal Code Format" TEXT, 
+		"Postal Code Regex" TEXT, 
+		"Languages" TEXT, 
+		geonameid INTEGER, 
+		neighbours TEXT, 
+		"EquivalentFipsCode" TEXT,
+		FOREIGN KEY(geonameid) REFERENCES allCountries(geonameid)
+	);
 	CREATE TABLE allCountries (
 		geonameid INTEGER NOT NULL PRIMARY KEY,
 		name TEXT,
@@ -125,6 +159,7 @@ EOF
 done
 }
 
+mk_countryinfo
 fieldsplit
 createtables
 copytables
