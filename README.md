@@ -88,6 +88,8 @@ Nota Bene
 =========
 
 As of 2014-10-01 countryInfo.txt has an incorrect number of fields for Åland Islands due to a double tab.
+SQLite will also interpret the last - and entirely empty - field in countryInfo.txt as an error.
+The script assumes these oddities are still the case and handles them accordingly, though to ignores Åland Islands.
 
 TODO
 ====
