@@ -24,7 +24,7 @@ Look up comma separated adm codes and names no lower than the current feature, a
 |  1125426    | Shighnan District | 37.61667 | 71.45     | ADM2               | second-order administrative division | AF,01,1125426    | Afghanistan,Badakhshan,Shighnan District | 2013-04-27T00:00:00+0000  |
 
 
-Example SQLite to do so:
+Example SQLite flavored SQL to do so:
 
 ```sql
 SELECT
