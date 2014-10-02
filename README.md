@@ -62,7 +62,7 @@ SELECT
     LEFT JOIN countryInfo AS cc 
         ON cc.ISO = a.countrycode
     WHERE
-        a.geonameid =  '{}'
+        a.geonameid =  '1125426'
     GROUP BY a.geonameid
 ;
 ```
