@@ -17,6 +17,22 @@ and admin codes/names in order to use the appropriate foreign keys there.
 How to Use
 ==========
 
+1. First run get_txt_dump.sh to download all the needed text files from GeoNames:
+
+```bash
+./get_txt_dump.sh
+```
+
+2. Then run geonames2sqlite.sh to populate SQLite database with these tables:
+
+```bash
+./geonames2sqlite.sh input/ output/geonames_$(date +%F).sqlite
+```
+
+
+Example Use
+===========
+
 Look up comma separated adm codes and names no lower than the current feature, along with the geonameid, name, lat, lng, modification date, etc:
 
 |  geoname_id | place_name        | latitude | longitude | location_type_code | location_type_name                   | geoname_adm_code | geonames_adm_name                        | geonames_retrieval_time   |
