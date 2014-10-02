@@ -27,6 +27,7 @@ basenames=$(
 )
 
 # right now country info table has junk above the actual records
+# there is also no content in the field EquivalentFipsCode
 # remove this based on the appearance of the header
 function mk_countryinfo
 {
@@ -36,6 +37,9 @@ function mk_countryinfo
 		sed 's:\t$::g' |\
 		# prefer to not do this but this record is messed up in their original!
 		grep -vE '^AX' |\
+		# remove field EquivalentFipsCode because there is nothing in it and it can confuse sqlite3 ("found 18 columns but needed 19")
+		mawk -F'\t' '{$19="";print $0}' |\
+		sed 's:\t\+:\t:g' |\
 		sponge $indir/countryInfo.txt
 	fi
 }
@@ -70,14 +74,14 @@ function createtables
 	-- otherwise we can't use admin1codesascii.adm1_code as a foreign key, or admin2codes.adm2_code, or featurecodes_en.class, or featurecodes_en.code, or 
 	--PRAGMA foreign_keys = on;
 	CREATE TABLE "countryInfo" (
-		"ISO" TEXT
-		"ISO3" TEXT NOT NULL, 
-		"ISO-Numeric" TEXT NOT NULL, 
+		"ISO" TEXT,
+		"ISO3" TEXT,
+		"ISO-Numeric" TEXT,
 		fips TEXT, 
-		"Country" TEXT NOT NULL, 
+		"Country" TEXT,
 		"Capital" TEXT, 
 		"Area(in sq km)" FLOAT, 
-		"Population" INTEGER NOT NULL, 
+		"Population" INTEGER,
 		"Continent" TEXT, 
 		tld TEXT, 
 		"CurrencyCode" TEXT, 
@@ -88,7 +92,6 @@ function createtables
 		"Languages" TEXT, 
 		geonameid INTEGER, 
 		neighbours TEXT, 
-		"EquivalentFipsCode" TEXT,
 		FOREIGN KEY(geonameid) REFERENCES allCountries(geonameid)
 	);
 	CREATE TABLE allCountries (
