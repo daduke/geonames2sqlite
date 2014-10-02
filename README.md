@@ -17,7 +17,14 @@ and admin codes/names in order to use the appropriate foreign keys there.
 How to Use
 ==========
 
-Look up pipe separated adm codes and names no lower than the current feature, along with the geonameid, name, lat, lng, modification date, etc:
+Look up comma separated adm codes and names no lower than the current feature, along with the geonameid, name, lat, lng, modification date, etc:
+
+|  geoname_id | place_name        | latitude | longitude | location_type_code | location_type_name                   | geoname_adm_code | geonames_adm_name                        | geonames_retrieval_time   |
+|-------------|-------------------|----------|-----------|--------------------|--------------------------------------|------------------|------------------------------------------|---------------------------|
+|  1125426    | Shighnan District | 37.61667 | 71.45     | ADM2               | second-order administrative division | AF,01,1125426    | Afghanistan,Badakhshan,Shighnan District | 2013-04-27T00:00:00+0000  |
+
+
+Example SQLite to do so:
 
 ```sql
 SELECT
@@ -51,12 +58,6 @@ SELECT
 		a.geonameid =  '1125426'
 	GROUP BY a.geonameid;
 ```
-
-Example output:
-
-|  geoname_id | place_name        | latitude | longitude | location_type_code | location_type_name                   | geoname_adm_code | geonames_adm_name                        | geonames_retrieval_time   |
-|-------------|-------------------|----------|-----------|--------------------|--------------------------------------|------------------|------------------------------------------|---------------------------|
-|  1125426    | Shighnan District | 37.61667 | 71.45     | ADM2               | second-order administrative division | AF,01,1125426    | Afghanistan,Badakhshan,Shighnan District | 2013-04-27T00:00:00+0000  |
 
 
 Nota Bene
