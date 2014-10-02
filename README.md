@@ -43,12 +43,12 @@ SELECT
         WHEN f.code = 'ADM1' THEN group_concat( cc.Country || ',' || adm1.adm1_name )
         WHEN f.code = 'ADM2' THEN group_concat( cc.Country || ',' || adm1.adm1_name || ',' || adm2.adm2_name ) 
         ELSE 
-	CASE
-		WHEN adm1.adm1_name IS NULL AND adm2.adm2_name IS NULL THEN cc.Country
-		WHEN adm1.adm1_name IS NOT NULL AND adm2.adm2_name IS NULL THEN group_concat( cc.Country || ',' || adm1.adm1_name )
-		WHEN adm1.adm1_name IS NOT NULL AND adm2.adm2_name IS NOT NULL THEN group_concat( cc.Country || ',' || adm1.adm1_name || ',' || adm2.adm2_name )
-		ELSE cc.Country
-	END
+		CASE
+			WHEN adm1.adm1_name IS NULL AND adm2.adm2_name IS NULL THEN cc.Country
+			WHEN adm1.adm1_name IS NOT NULL AND adm2.adm2_name IS NULL THEN group_concat( cc.Country || ',' || adm1.adm1_name )
+			WHEN adm1.adm1_name IS NOT NULL AND adm2.adm2_name IS NOT NULL THEN group_concat( cc.Country || ',' || adm1.adm1_name || ',' || adm2.adm2_name )
+			ELSE cc.Country
+		END
     END AS geonames_adm_name,
     modificationdate || 'T00:00:00+0000' AS geonames_retrieval_time
     FROM
