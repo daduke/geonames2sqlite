@@ -28,35 +28,43 @@ Example SQLite to do so:
 
 ```sql
 SELECT
-	a.geonameid AS geoname_id,
-	a.name AS place_name,
-	a.latitude,
-	a.longitude,
-	f.code AS location_type_code,
-	f.name AS location_type_name,
-	CASE 
-		WHEN f.code = 'ADM1' THEN group_concat( a.countrycode || '|' || adm1.adm1_code, ',' ) 
-		WHEN f.code = 'ADM2' THEN group_concat( a.countrycode || '|' || adm1.adm1_code || '|' || adm2.adm2_code, ',' )
-		ELSE group_concat( a.countrycode || '|' || a.admin1code || '|' || a.admin2code || '|' || a.admin3code || '|' || a.admin4code, ',' )
-	END AS geoname_adm_code,
+    a.geonameid AS geoname_id,
+    a.name AS place_name,
+    a.latitude,
+    a.longitude,
+    f.code AS location_type_code,
+    f.name AS location_type_name,
+    CASE 
+        WHEN f.code = 'ADM1' THEN group_concat( a.countrycode || '|' || adm1.adm1_code ) 
+        WHEN f.code = 'ADM2' THEN group_concat( a.countrycode || '|' || adm1.adm1_code || '|' || adm2.adm2_code )
+        ELSE group_concat( a.countrycode || '|' || a.admin1code || '|' || a.admin2code || '|' || a.admin3code || '|' || a.admin4code )
+    END AS geoname_adm_code,
+    CASE
+        WHEN f.code = 'ADM1' THEN group_concat( cc.Country || '|' || adm1.adm1_name )
+        WHEN f.code = 'ADM2' THEN group_concat( cc.Country || '|' || adm1.adm1_name || '|' || adm2.adm2_name ) 
+        ELSE 
 	CASE
-		WHEN f.code = 'ADM1' THEN group_concat( cc.Country || '|' || adm1.adm1_name, ',')
-		ELSE group_concat( cc.Country || '|' || adm1.adm1_name || '|' || adm2.adm2_name, ',') 
-	END AS geonames_adm_name,
-	modificationdate || 'T00:00:00+0000' AS geonames_retrieval_time
-	FROM
-		allCountries AS a
-	LEFT JOIN featurecodes_en AS f 
-		ON a.featurecode = f.code
-	LEFT JOIN admin1codesascii AS adm1 
-		ON adm1.adm0_code = a.countrycode AND adm1.adm1_code = a.admin1code
-	LEFT JOIN admin2codes AS adm2 
-		ON adm2.adm0_code = a.countrycode AND adm2.adm1_code = a.admin1code AND adm2.adm2_code = a.admin2code
-	LEFT JOIN countryInfo AS cc 
-		ON cc.ISO = a.countrycode
-	WHERE
-		a.geonameid =  '1125426'
-	GROUP BY a.geonameid;
+		WHEN adm1.adm1_name IS NULL AND adm2.adm2_name IS NULL THEN cc.Country
+		WHEN adm1.adm1_name IS NOT NULL AND adm2.adm2_name IS NULL THEN group_concat( cc.Country || '|' || adm1.adm1_name )
+		WHEN adm1.adm1_name IS NOT NULL AND adm2.adm2_name IS NOT NULL THEN group_concat( cc.Country || '|' || adm1.adm1_name || '|' || adm2.adm2_name )
+		ELSE cc.Country
+	END
+    END AS geonames_adm_name,
+    modificationdate || 'T00:00:00+0000' AS geonames_retrieval_time
+    FROM
+        allCountries AS a
+    LEFT JOIN featurecodes_en AS f 
+        ON a.featurecode = f.code
+    LEFT JOIN admin1codesascii AS adm1 
+        ON adm1.adm0_code = a.countrycode AND adm1.adm1_code = a.admin1code
+    LEFT JOIN admin2codes AS adm2 
+        ON adm2.adm0_code = a.countrycode AND adm2.adm1_code = a.admin1code AND adm2.adm2_code = a.admin2code
+    LEFT JOIN countryInfo AS cc 
+        ON cc.ISO = a.countrycode
+    WHERE
+        a.geonameid =  '{}'
+    GROUP BY a.geonameid
+;
 ```
 
 
