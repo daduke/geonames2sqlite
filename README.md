@@ -20,7 +20,7 @@ How to Use
 ./get_txt_dump.sh
 ```
 
-2. Then run geonames2sqlite.sh to populate SQLite database with these tables:
+2. Then run geonames2sqlite.sh to populate a new SQLite database with these tables:
 
 ```bash
 ./geonames2sqlite.sh input/ output/geonames_$(date +%F).sqlite
