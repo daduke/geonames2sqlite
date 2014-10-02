@@ -10,9 +10,6 @@ Make a single SQLite database from the following GeoNames text dump tables:
 * hierarchy.txt
 * countryInfo.txt
 
-Note that while allCountries.geonameid is used as a foreign key for most tables,
-we really ought to break up allCountries into more tables for feature codes/classes
-and admin codes/names in order to use the appropriate foreign keys there.
 
 How to Use
 ==========
@@ -28,7 +25,6 @@ How to Use
 ```bash
 ./geonames2sqlite.sh input/ output/geonames_$(date +%F).sqlite
 ```
-
 
 Example Use
 ===========
@@ -90,6 +86,10 @@ Nota Bene
 As of 2014-10-01 countryInfo.txt has an incorrect number of fields for Åland Islands due to a double tab.
 SQLite will also interpret the last - and entirely empty - field in countryInfo.txt as an error.
 The script assumes these oddities are still the case and handles them accordingly, though to ignores Åland Islands.
+
+Note that while allCountries.geonameid is used as a foreign key for most tables,
+we really ought to break up allCountries into more tables for feature codes/classes
+and admin codes/names in order to use the appropriate foreign keys there.
 
 TODO
 ====
