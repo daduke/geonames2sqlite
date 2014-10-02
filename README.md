@@ -28,13 +28,13 @@ SELECT
 	f.code AS location_type_code,
 	f.name AS location_type_name,
 	CASE 
-		WHEN f.code = 'ADM1' THEN group_concat( a.countrycode || '|' || adm1.adm1_code, '|' ) 
-		WHEN f.code = 'ADM2' THEN group_concat( a.countrycode || '|' || adm1.adm1_code || '|' || adm2.adm2_code, '|' )
-		ELSE group_concat( a.countrycode || '|' || a.admin1code || '|' || a.admin2code || '|' || a.admin3code || '|' || a.admin4code, '|' )
+		WHEN f.code = 'ADM1' THEN group_concat( a.countrycode || '|' || adm1.adm1_code, ',' ) 
+		WHEN f.code = 'ADM2' THEN group_concat( a.countrycode || '|' || adm1.adm1_code || '|' || adm2.adm2_code, ',' )
+		ELSE group_concat( a.countrycode || '|' || a.admin1code || '|' || a.admin2code || '|' || a.admin3code || '|' || a.admin4code, ',' )
 	END AS geoname_adm_code,
 	CASE
-		WHEN f.code = 'ADM1' THEN group_concat( cc.Country || '|' || adm1.adm1_name, '|')
-		ELSE group_concat( cc.Country || '|' || adm1.adm1_name || '|' || adm2.adm2_name, '|') 
+		WHEN f.code = 'ADM1' THEN group_concat( cc.Country || '|' || adm1.adm1_name, ',')
+		ELSE group_concat( cc.Country || '|' || adm1.adm1_name || '|' || adm2.adm2_name, ',') 
 	END AS geonames_adm_name,
 	modificationdate || 'T00:00:00+0000' AS geonames_retrieval_time
 	FROM
@@ -56,7 +56,7 @@ Example output:
 
 |  geoname_id | place_name        | latitude | longitude | location_type_code | location_type_name                   | geoname_adm_code | geonames_adm_name                        | geonames_retrieval_time   |
 |-------------|-------------------|----------|-----------|--------------------|--------------------------------------|------------------|------------------------------------------|---------------------------|
-|  1125426    | Shighnan District | 37.61667 | 71.45     | ADM2               | second-order administrative division | AF|01|1125426    | Afghanistan|Badakhshan|Shighnan District | 2013-04-27T00:00:00|0000  |
+|  1125426    | Shighnan District | 37.61667 | 71.45     | ADM2               | second-order administrative division | AF,01,1125426    | Afghanistan,Badakhshan,Shighnan District | 2013-04-27T00:00:00+0000  |
 
 
 Nota Bene
