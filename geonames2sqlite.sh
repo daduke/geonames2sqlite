@@ -33,6 +33,9 @@ function mk_countryinfo
 	if [[ -n $( cat $indir/countryInfo.txt | grep -E '^#ISO' ) ]]; then
 		cat $indir/countryInfo.txt |\
 		sed '1,/#ISO/d' |\
+		sed 's:\t$::g' |\
+		# prefer to not do this but this record is messed up in their original!
+		grep -vE '^AX' |\
 		sponge $indir/countryInfo.txt
 	fi
 }
