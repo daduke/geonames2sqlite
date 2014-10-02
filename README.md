@@ -14,13 +14,13 @@ Make a single SQLite database from the following GeoNames text dump tables:
 How to Use
 ==========
 
-1. First run get_txt_dump.sh to download all the needed text files from GeoNames:
+* First run get_txt_dump.sh to download all the needed text files from GeoNames:
 
 ```bash
 ./get_txt_dump.sh
 ```
 
-2. Then run geonames2sqlite.sh to populate a new SQLite database with these tables:
+* Then run geonames2sqlite.sh to populate a new SQLite database with these tables:
 
 ```bash
 ./geonames2sqlite.sh input/ output/geonames_$(date +%F).sqlite
