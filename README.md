@@ -21,8 +21,8 @@ Look up pipe separated adm codes and names no lower than the current feature, al
 
 ```sql
 SELECT
-	a.geonameid as geoname_id,
-	a.name as place_name,
+	a.geonameid AS geoname_id,
+	a.name AS place_name,
 	a.latitude,
 	a.longitude,
 	f.code AS location_type_code,
