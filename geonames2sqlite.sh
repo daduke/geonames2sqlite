@@ -38,10 +38,18 @@ function mk_countryinfo
 		# prefer to not do this but this record is messed up in their original!
 		grep -vE '^AX' |\
 		# remove field EquivalentFipsCode because there is nothing in it and it can confuse sqlite3 ("found 18 columns but needed 19")
-		mawk -F'\t' '{$19="";print $0}' |\
+        cut -f-18 |\
 		sed 's:\t\+:\t:g' |\
 		sponge $indir/countryInfo.txt
 	fi
+}
+
+#fix unquoted " in allCountries.txt
+function mk_allCountries
+{
+    cat $indir/allCountries.txt |\
+    sed 's:":\\":g' |\
+    sponge $indir/allCountries.txt
 }
 
 # split geonames TSV fields on period
@@ -166,6 +174,7 @@ done
 }
 
 mk_countryinfo
+mk_allCountries
 fieldsplit
 createtables
 copytables
