@@ -14,8 +14,12 @@ function get_zip_if_not_exists
 	if [[ -z $( find $outdir -maxdepth 1 -type f -iregex ".*${txt}$" ) ]]; then
 		wget -c -np -P $outdir $1
 		cd $outdir
-		unzip $zip
+		unzip -n $zip
 		rm $zip
+        if [[ "$txt" != "hierarchy.txt" ]]; then
+            cat $txt >> allCountries.txt
+            rm $txt
+        fi
 		cd - 1>/dev/null
 	else
 		echo -e "Geonames $( basename $zip .zip ).txt is already under the output directory!\nIf this is not the right file, remove it and run this script again."
@@ -23,7 +27,10 @@ function get_zip_if_not_exists
 }
 
 get_zip_if_not_exists http://download.geonames.org/export/dump/hierarchy.zip
-get_zip_if_not_exists http://download.geonames.org/export/dump/allCountries.zip
+for c in `cat countries.cfg` ; do
+    get_zip_if_not_exists http://download.geonames.org/export/dump/$c.zip
+done
+rm input/readme.txt
 
 tmp=$(mktemp)
 # NB: allCountries.zip and hierarchy.zip are missing from this list because they're handled by functions above
