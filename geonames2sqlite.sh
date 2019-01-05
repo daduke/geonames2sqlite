@@ -49,6 +49,7 @@ function mk_allCountries
 {
     cat $indir/allCountries.txt |\
     sed 's:":\\":g' |\
+    cut -f-9 |\
     sponge $indir/allCountries.txt
 }
 
@@ -111,17 +112,7 @@ function createtables
 		longitude REAL,
 		featureclass TEXT,
 		featurecode TEXT, 
-		countrycode TIME, 
-		cc2 TEXT, 
-		admin1code TEXT, 
-		admin2code TEXT, 
-		admin3code TEXT, 
-		admin4code TEXT, 
-		population INTEGER, 
-		elevation TEXT, 
-		dem INTEGER, 
-		timezone TEXT, 
-		modificationdate DATE
+		countrycode TIME 
 	);
 	CREATE TABLE admin1codesascii (
 		adm0_code TEXT,
